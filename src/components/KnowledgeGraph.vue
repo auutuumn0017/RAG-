@@ -7,17 +7,6 @@
      
      <div class="flex-1 w-full relative overflow-hidden bg-slate-900/40">
        <div ref="chartRef" class="absolute inset-0"></div>
-       
-       <div class="absolute bottom-4 left-4 space-y-1 pointer-events-none z-10">
-          <div class="flex items-center gap-2 text-[9px]">
-             <div class="w-2 h-2 bg-cyan-500 rounded-full"></div>
-             <span class="text-slate-300 uppercase font-mono font-bold tracking-wider">核心实体</span>
-          </div>
-          <div class="flex items-center gap-2 text-[9px]">
-             <div class="w-2 h-2 bg-indigo-500 rounded-full"></div>
-             <span class="text-slate-300 uppercase font-mono font-bold tracking-wider">当前主题</span>
-          </div>
-       </div>
      </div>
      
      <div class="p-3 bg-slate-800/50 border-t border-slate-700/50 flex gap-4 shrink-0 z-10">
@@ -49,7 +38,7 @@ import * as echarts from 'echarts'
 
 const props = defineProps<{
   graphData?: {
-    nodes: Array<{id: string, name: string}>
+    nodes: Array<{id: string, name: string, category?: string}>
     links: Array<{source: string, target: string, label?: string}>
   } | null
   confidence?: number
@@ -62,6 +51,21 @@ const myChart = shallowRef<echarts.ECharts | null>(null)
 const getBaseOption = () => {
   return {
     backgroundColor: 'transparent',
+    legend: {
+      show: true,
+      data: ['核心实体', '关联知识'],
+      bottom: 10,
+      left: 10,
+      textStyle: {
+        color: '#94a3b8',
+        fontSize: 10,
+        fontFamily: 'monospace',
+        fontWeight: 'bold'
+      },
+      itemWidth: 10,
+      itemHeight: 10,
+      icon: 'circle'
+    },
     tooltip: {
       show: true,
       theme: 'dark',
@@ -81,6 +85,18 @@ const getBaseOption = () => {
         layout: 'force',
         data: [],
         links: [],
+        categories: [
+          {
+            name: '核心实体',
+            symbolSize: 60,
+            itemStyle: { color: '#0891b2', borderColor: '#22d3ee', borderWidth: 2, shadowBlur: 20, shadowColor: '#22d3ee' }
+          },
+          {
+            name: '关联知识',
+            symbolSize: 40,
+            itemStyle: { color: '#1e1b4b', borderColor: '#818cf8', borderWidth: 1 }
+          }
+        ],
         roam: true,
         label: {
           show: true,
@@ -122,11 +138,11 @@ onMounted(() => {
 
   // Initial Graph Data
   const data = [
-    { name: '机器学习', symbolSize: 60, category: 0, itemStyle: { color: '#0891b2', borderColor: '#22d3ee', borderWidth: 2, shadowBlur: 20, shadowColor: '#22d3ee' } },
-    { name: '支持向量机', symbolSize: 45, category: 1, itemStyle: { color: '#1e1b4b', borderColor: '#818cf8', borderWidth: 2 } },
-    { name: '经验风险', symbolSize: 35, category: 1, itemStyle: { color: '#1e293b', borderColor: '#38bdf8', borderWidth: 1 } },
-    { name: '深度学习', symbolSize: 50, category: 2, itemStyle: { color: '#1e293b', borderColor: '#38bdf8', borderWidth: 1 } },
-    { name: '梯度下降', symbolSize: 40, category: 2, itemStyle: { color: '#1e293b', borderColor: '#475569', borderWidth: 1 } }
+    { name: '机器学习', category: 0 },
+    { name: '支持向量机', category: 1 },
+    { name: '经验风险', category: 1 },
+    { name: '深度学习', category: 1 },
+    { name: '梯度下降', category: 1 }
   ]
 
   const links = [
@@ -167,17 +183,11 @@ watch(() => props.graphData, (newData) => {
   }
 
   const formattedNodes = newData.nodes.map((node, index) => {
-    const isPrimary = index === 0
+    // If backend provides category use it, else fallback to primary/neighbor based on index
+    const isCore = node.category === 'core' || (!node.category && index === 0);
     return {
       name: node.name || node.id,
-      symbolSize: isPrimary ? 60 : 40,
-      itemStyle: {
-        color: isPrimary ? '#0891b2' : '#1e1b4b',
-        borderColor: isPrimary ? '#22d3ee' : '#818cf8',
-        borderWidth: isPrimary ? 2 : 1,
-        shadowBlur: isPrimary ? 20 : 0,
-        shadowColor: isPrimary ? '#22d3ee' : 'transparent'
-      }
+      category: isCore ? 0 : 1,
     }
   })
 
