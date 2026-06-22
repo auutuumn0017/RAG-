@@ -21,7 +21,7 @@
              'avatar-speaking': status === 'speaking',
              'avatar-thinking-wrapper': status === 'thinking'
            }">
-         <img :src="avatarImg" alt="Digital Avatar" class="w-full h-full object-cover rounded-full bg-slate-800 border-4 border-transparent z-10 relative" />
+         <img :src="'/avatar.png'" alt="Digital Avatar" class="w-full h-full object-cover rounded-full bg-slate-800 border-4 border-transparent z-10 relative" />
       </div>
 
       <!-- Bottom Data overlay -->
@@ -43,7 +43,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import avatarImg from '../assets/avatar.png'
 
 const props = defineProps<{
   status: string // 'idle' | 'thinking' | 'speaking'
