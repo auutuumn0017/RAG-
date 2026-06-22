@@ -8,7 +8,7 @@
            专属数字教师大脑
         </h1>
       </div>
-      <ChatArea @status-change="handleStatusChange" @update-graph="handleGraphUpdate" />
+      <ChatArea @status-change="handleStatusChange" @update-graph="handleGraphUpdate" @play-audio="handlePlayAudio" />
     </div>
 
     <!-- Right: Avatar & Graph (40%) -->
@@ -36,8 +36,35 @@ const currentGraphData = ref<any>(null)
 const currentConfidence = ref<number>(94)
 const currentRelevance = ref<number>(82)
 
+let currentAudio: HTMLAudioElement | null = null
+
 const handleStatusChange = (status: string) => {
   teacherStatus.value = status
+}
+
+const handlePlayAudio = (audioBase64: string) => {
+  if (!audioBase64) return
+  
+  if (currentAudio) {
+    currentAudio.pause()
+  }
+
+  try {
+    currentAudio = new Audio("data:audio/wav;base64," + audioBase64)
+    teacherStatus.value = 'speaking'
+    
+    currentAudio.play().catch(e => {
+      console.error('Audio playback failed:', e)
+      teacherStatus.value = 'idle'
+    })
+
+    currentAudio.onended = () => {
+      teacherStatus.value = 'idle'
+    }
+  } catch (error) {
+    console.error('Failed to parse or play audio base64:', error)
+    teacherStatus.value = 'idle'
+  }
 }
 
 const handleGraphUpdate = (payload: any) => {

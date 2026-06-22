@@ -52,7 +52,7 @@
 import { ref, nextTick, watch } from 'vue'
 import axios from 'axios'
 
-const emit = defineEmits(['status-change', 'update-graph'])
+const emit = defineEmits(['status-change', 'update-graph', 'play-audio'])
 
 interface Message {
   id: number
@@ -104,6 +104,8 @@ const sendMessage = async () => {
   isWaiting.value = true
   emit('status-change', 'thinking')
 
+  let hasAudio = false
+
   // 2. Perform API request to standard localhost:8000
   try {
     const res = await axios.post('http://127.0.0.1:8000/api/chat', { query })
@@ -122,6 +124,11 @@ const sendMessage = async () => {
         relevance: res.data.relevance,
         confidence: res.data.confidence
       })
+    }
+    
+    if (res.data.audio) {
+      hasAudio = true
+      emit('play-audio', res.data.audio)
     }
   } catch (error: any) {
     console.error('API Error:', error)
@@ -151,10 +158,12 @@ const sendMessage = async () => {
     })
   } finally {
     isWaiting.value = false
-    // Restore IDLE status after "speaking" simulation period
-    setTimeout(() => {
-      emit('status-change', 'idle')
-    }, 4000)
+    // Restore IDLE status after "speaking" simulation period if no audio is playing
+    if (!hasAudio) {
+      setTimeout(() => {
+        emit('status-change', 'idle')
+      }, 4000)
+    }
   }
 }
 </script>
