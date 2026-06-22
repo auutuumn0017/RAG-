@@ -19,7 +19,7 @@
       </div>
       <!-- Bottom Right: Graph (60%) -->
       <div class="h-[60%] bg-[#1e293b]/70 border border-[#94a3b8]/10 rounded-xl backdrop-blur-md overflow-hidden flex flex-col">
-        <KnowledgeGraph :graph-data="currentGraphData" />
+        <KnowledgeGraph :graph-data="currentGraphData" :confidence="currentConfidence" :relevance="currentRelevance" />
       </div>
     </div>
   </div>
@@ -33,12 +33,22 @@ import KnowledgeGraph from './components/KnowledgeGraph.vue'
 
 const teacherStatus = ref('idle')
 const currentGraphData = ref<any>(null)
+const currentConfidence = ref<number>(94)
+const currentRelevance = ref<number>(82)
 
 const handleStatusChange = (status: string) => {
   teacherStatus.value = status
 }
 
-const handleGraphUpdate = (graphData: any) => {
-  currentGraphData.value = graphData
+const handleGraphUpdate = (payload: any) => {
+  if (payload.graphData) {
+    currentGraphData.value = payload.graphData
+  }
+  if (payload.confidence !== undefined) {
+    currentConfidence.value = payload.confidence
+  }
+  if (payload.relevance !== undefined) {
+    currentRelevance.value = payload.relevance
+  }
 }
 </script>

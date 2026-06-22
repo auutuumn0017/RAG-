@@ -22,15 +22,21 @@
      
      <div class="p-3 bg-slate-800/50 border-t border-slate-700/50 flex gap-4 shrink-0 z-10">
         <div class="flex-1">
-           <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">置信度</div>
-           <div class="h-1 bg-slate-700 mt-1 rounded-full overflow-hidden">
-              <div class="h-full bg-cyan-400 w-[94%]"></div>
+           <div class="flex justify-between items-center mb-1">
+             <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">置信度</div>
+             <div class="text-[9px] text-cyan-400 font-mono">{{ confidence ?? 94 }}%</div>
+           </div>
+           <div class="h-1 bg-slate-700 rounded-full overflow-hidden">
+              <div class="h-full bg-cyan-400 transition-all duration-500 ease-out" :style="{ width: `${confidence ?? 94}%` }"></div>
            </div>
         </div>
         <div class="flex-1">
-           <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">相关性</div>
-           <div class="h-1 bg-slate-700 mt-1 rounded-full overflow-hidden">
-              <div class="h-full bg-indigo-400 w-[82%]"></div>
+           <div class="flex justify-between items-center mb-1">
+             <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wider">相关性</div>
+             <div class="text-[9px] text-indigo-400 font-mono">{{ relevance ?? 82 }}%</div>
+           </div>
+           <div class="h-1 bg-slate-700 rounded-full overflow-hidden">
+              <div class="h-full bg-indigo-400 transition-all duration-500 ease-out" :style="{ width: `${relevance ?? 82}%` }"></div>
            </div>
         </div>
      </div>
@@ -46,6 +52,8 @@ const props = defineProps<{
     nodes: Array<{id: string, name: string}>
     links: Array<{source: string, target: string, label?: string}>
   } | null
+  confidence?: number
+  relevance?: number
 }>()
 
 const chartRef = ref<HTMLElement | null>(null)

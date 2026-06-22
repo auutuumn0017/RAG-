@@ -116,8 +116,12 @@ const sendMessage = async () => {
       think_process: res.data.think_process
     })
 
-    if (res.data.graph_data) {
-      emit('update-graph', res.data.graph_data)
+    if (res.data.graph_data || res.data.relevance !== undefined || res.data.confidence !== undefined) {
+      emit('update-graph', {
+        graphData: res.data.graph_data,
+        relevance: res.data.relevance,
+        confidence: res.data.confidence
+      })
     }
   } catch (error: any) {
     console.error('API Error:', error)
@@ -133,13 +137,17 @@ const sendMessage = async () => {
 
     // Mock graph data on failure
     emit('update-graph', {
-      nodes: [
-        { id: '机器学习', name: '机器学习' },
-        { id: '深度学习', name: '深度学习' }
-      ],
-      links: [
-        { source: '机器学习', target: '深度学习', label: '包含' }
-      ]
+      graphData: {
+        nodes: [
+          { id: '机器学习', name: '机器学习' },
+          { id: '深度学习', name: '深度学习' }
+        ],
+        links: [
+          { source: '机器学习', target: '深度学习', label: '包含' }
+        ]
+      },
+      relevance: 85,
+      confidence: 88
     })
   } finally {
     isWaiting.value = false
