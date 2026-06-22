@@ -15,7 +15,7 @@
       <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#38bdf8 1px, transparent 1px); background-size: 20px 20px;"></div>
 
       <!-- Avatar Core -->
-      <div class="relative w-32 h-32 rounded-full flex items-center justify-center z-10 transition-all duration-500 avatar-container"
+      <div class="relative w-64 h-64 rounded-full flex items-center justify-center z-10 transition-all duration-500 avatar-container"
            :class="{
              'avatar-idle': status === 'idle',
              'avatar-speaking': status === 'speaking',
