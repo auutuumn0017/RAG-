@@ -13,12 +13,12 @@
 
     <!-- Right: Avatar & Graph (40%) -->
     <div class="w-2/5 h-full flex flex-col gap-4">
-      <!-- Top Right: Avatar (40%) -->
-      <div class="h-[40%] bg-[#1e293b]/70 border border-[#94a3b8]/10 rounded-xl backdrop-blur-md overflow-hidden flex flex-col">
+      <!-- Top Right: Avatar (55%) -->
+      <div class="h-[55%] bg-[#1e293b]/70 border border-[#94a3b8]/10 rounded-xl backdrop-blur-md overflow-hidden flex flex-col">
         <DigitalAvatar :status="teacherStatus" />
       </div>
-      <!-- Bottom Right: Graph (60%) -->
-      <div class="h-[60%] bg-[#1e293b]/70 border border-[#94a3b8]/10 rounded-xl backdrop-blur-md overflow-hidden flex flex-col">
+      <!-- Bottom Right: Graph (45%) -->
+      <div class="h-[45%] bg-[#1e293b]/70 border border-[#94a3b8]/10 rounded-xl backdrop-blur-md overflow-hidden flex flex-col">
         <KnowledgeGraph :graph-data="currentGraphData" :confidence="currentConfidence" :relevance="currentRelevance" />
       </div>
     </div>

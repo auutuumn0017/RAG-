@@ -21,7 +21,15 @@
              'avatar-speaking': status === 'speaking',
              'avatar-thinking-wrapper': status === 'thinking'
            }">
-         <img :src="'/avatar.png'" alt="Digital Avatar" class="w-full h-full object-cover rounded-full bg-slate-800 border-4 border-transparent z-10 relative" />
+         <!-- Idle Video -->
+         <video src="/idle.mp4" autoplay loop muted playsinline 
+                class="absolute inset-0 w-full h-full object-cover rounded-full bg-slate-800 border-4 border-transparent z-10 transition-opacity duration-300"
+                :style="{ opacity: status === 'speaking' ? 0 : 1 }"></video>
+                
+         <!-- Talking Video -->
+         <video src="/talking.mp4" autoplay loop muted playsinline 
+                class="absolute inset-0 w-full h-full object-cover rounded-full bg-slate-800 border-4 border-transparent z-20 transition-opacity duration-300"
+                :style="{ opacity: status === 'speaking' ? 1 : 0 }"></video>
       </div>
 
       <!-- Bottom Data overlay -->
@@ -88,7 +96,7 @@ const audioPlayer = ref<HTMLAudioElement | null>(null)
   animation: pulse-glow 1.5s ease-in-out infinite;
 }
 
-.avatar-speaking img {
+.avatar-speaking video {
   border-color: #22d3ee;
 }
 
@@ -109,7 +117,7 @@ const audioPlayer = ref<HTMLAudioElement | null>(null)
   z-index: 0;
 }
 
-.avatar-thinking-wrapper img {
+.avatar-thinking-wrapper video {
   border-color: rgba(234, 179, 8, 0.3);
 }
 
@@ -118,7 +126,7 @@ const audioPlayer = ref<HTMLAudioElement | null>(null)
   transform: scale(1);
 }
 
-.avatar-idle img {
+.avatar-idle video {
   border-color: rgba(34, 197, 94, 0.5);
 }
 
