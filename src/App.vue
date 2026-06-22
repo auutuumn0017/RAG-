@@ -49,22 +49,25 @@ const handlePlayAudio = (audioBase64: string) => {
     currentAudio.pause()
   }
 
-  try {
-    currentAudio = new Audio("data:audio/wav;base64," + audioBase64)
-    teacherStatus.value = 'speaking'
-    
-    currentAudio.play().catch(e => {
-      console.error('Audio playback failed:', e)
-      teacherStatus.value = 'idle'
-    })
+  // 1. 确保拼凑了正确的 data URI 头
+  const audioSrc = "data:audio/wav;base64," + audioBase64;
+  
+  // 2. 创建 Audio 实例
+  const audioObj = new Audio(audioSrc);
+  currentAudio = audioObj;
+  
+  // 3. 改变 UI 状态为“正在讲话”
+  teacherStatus.value = 'speaking'; 
+  
+  // 4. 使用 play().catch() 捕获并忽略浏览器的自动播放报错
+  audioObj.play().catch(error => {
+    console.warn("浏览器拦截了自动播放:", error);
+  });
 
-    currentAudio.onended = () => {
-      teacherStatus.value = 'idle'
-    }
-  } catch (error) {
-    console.error('Failed to parse or play audio base64:', error)
-    teacherStatus.value = 'idle'
-  }
+  // 5. 监听播放结束，恢复状态
+  audioObj.onended = () => {
+    teacherStatus.value = 'idle';
+  };
 }
 
 const handleGraphUpdate = (payload: any) => {
