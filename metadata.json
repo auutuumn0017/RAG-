@@ -1,0 +1,6 @@
+{
+  "name": "Machine Learning Teaching Platform",
+  "description": "A Vue 3 + Element Plus AI teaching platform with chat, multi-modal avatar, and ECharts knowledge graph.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
