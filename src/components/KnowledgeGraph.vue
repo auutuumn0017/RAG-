@@ -186,12 +186,24 @@ watch(() => props.graphData, (newData) => {
     // If backend provides category use it, else fallback to primary/neighbor based on index
     const isCore = node.category === 'core' || (!node.category && index === 0);
     return {
+      id: node.id || node.name,
       name: node.name || node.id,
       category: isCore ? 0 : 1,
     }
   })
 
-  const formattedLinks = (newData.links || []).map(link => ({
+  // Filter links to ensure both source and target exist to prevent ECharts crash
+  const validNodeIds = new Set(formattedNodes.map(n => n.id))
+  const validNodeNames = new Set(formattedNodes.map(n => n.name))
+  
+  const formattedLinks = (newData.links || []).filter(link => {
+    const sourceExists = validNodeIds.has(link.source) || validNodeNames.has(link.source)
+    const targetExists = validNodeIds.has(link.target) || validNodeNames.has(link.target)
+    if (!sourceExists || !targetExists) {
+      console.warn(`Link omitted due to missing source/target:`, link)
+    }
+    return sourceExists && targetExists
+  }).map(link => ({
     source: link.source,
     target: link.target,
     value: link.label || ''
